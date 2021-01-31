@@ -1,13 +1,10 @@
 package com.hieutn;
 
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class CalcServer implements CalcInterface {
-
-    private static final long serialVersionUID = 1L;
+public class CalcServer implements CalcInterface, Pair {
 
     protected CalcServer() {
     }
@@ -18,7 +15,7 @@ public class CalcServer implements CalcInterface {
             CalcInterface stub = (CalcInterface) UnicastRemoteObject.exportObject(server, 0);
 
             // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry(5000);
             registry.bind("calc", stub);
 
             System.err.println("Server ready");
@@ -30,12 +27,17 @@ public class CalcServer implements CalcInterface {
 
 
     @Override
-    public int getSum(int a, int b) throws RemoteException {
+    public int getSum(int a, int b) {
         return a + b;
     }
 
     @Override
-    public int getMul(int a, int b) throws RemoteException {
+    public int getMul(int a, int b) {
         return a * b;
+    }
+
+    @Override
+    public Pair getSumMul() {
+        return new CalcServer();
     }
 }
